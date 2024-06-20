@@ -9,16 +9,15 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 
 export const loginUser = (username, password) => {
-  return (dispatch) => {
-    return login(username, password)
-      .then(user => {
-        dispatch({ type: LOGIN_SUCCESS, payload: user });
-        return { authenticated: true };
-      })
-      .catch(error => {
-        dispatch({ type: LOGIN_FAILURE, payload: error.message });
-        return { authenticated: false };
-      });
+  return async (dispatch) => {
+    try {
+      const user = await login(username, password);
+      dispatch({ type: LOGIN_SUCCESS, payload: user });
+      return { authenticated: true };
+    } catch (error) {
+      dispatch({ type: LOGIN_FAILURE, payload: error.message });
+      return { authenticated: false };
+    }
   };
 };
 

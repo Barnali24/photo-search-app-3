@@ -40,7 +40,7 @@ const App = () => {
         const check1 = String(collection.id);
         const check2 = String(collectionId);
         console.log(check1, check2);
-        if (check1 === check2 && collection.userId === currentUser.username) {
+        if (check1 === check2 && ((collection.userId === currentUser.username)||(currentUser.role==='Admin'))) {
           console.log("inside");
           const photoExists = collection.photos.some((p) => p.id === photo.id);
           if (!photoExists) {
@@ -79,7 +79,7 @@ Don't have an account? <Link to="/signup">Sign up</Link>
         <Route path="/photo-search" element={
           currentUser ? (
             <PhotoSearch
-              collections={collections}
+            collections={collections}
               onAddToCollection={handleAddToCollection}
             />
           ) : (

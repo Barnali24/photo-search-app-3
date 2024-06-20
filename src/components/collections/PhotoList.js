@@ -1,12 +1,13 @@
 import React from 'react';
+import '../../styles/PhotoList.css'
 
-const PhotoList = ({ photos, onDelete }) => {
+const PhotoList = ({ photos, onDelete,collectionId }) => {
   return (
-    <div>
+    <div className="photo-list">
       {photos.map((photo, index) => (
-        <div key={index}>
+        <div key={index} className="photo-item">
           <img src={photo.urls.small} alt={photo.description} />
-          <button onClick={() => onDelete(photo.id)}>Remove</button>
+          <button onClick={() => onDelete(collectionId, photo.id)}>Delete Photo</button>
         </div>
       ))}
     </div>

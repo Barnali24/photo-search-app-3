@@ -17,7 +17,8 @@ export const login = (username, password) => {
     const users = getUsers();console.log(users);
     const user = users.find((u) => u.username === username && u.password === password);
     if (user) {
-      resolve({ username: user.username });
+      // resolve({ username: user.username });
+      resolve(user);
     } else {
       reject(new Error('Invalid credentials'));
     }

@@ -3,11 +3,33 @@ import CollectionForm from './CollectionForm';
 import CollectionList from './CollectionList';
 import PhotoList from './PhotoList';
 import { useSelector } from 'react-redux';
+import EditCollectionModal from './EditCollectionModal';
 
 
 const CollectionManager = ({ collections, setCollections }) => {
   const [selectedCollection, setSelectedCollection] = useState(null);
   const currentUser = useSelector((state) => state.currentUser);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCollection, setEditingCollection] = useState(null);
+
+  // ... existing functions
+
+  const handleEditCollection = (collection) => {
+    setEditingCollection(collection);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditingCollection(null);
+  };
+
+  const handleModalSave = (newName) => {
+    if (editingCollection) {
+      updateCollection(editingCollection.id, newName);
+    }
+    handleModalClose();
+  };
   useEffect(() => {
     // Save collections to local storage whenever they change
   
@@ -66,9 +88,6 @@ const CollectionManager = ({ collections, setCollections }) => {
     setSelectedCollection(null); // Clear selection
   };
 
-  const handleSelectCollection = (collection) => {
-    setSelectedCollection(collection);
-  };
 
   const handleDeleteCollection = (id) => {
     deleteCollection(id);
@@ -76,32 +95,38 @@ const CollectionManager = ({ collections, setCollections }) => {
   };
 
 
-  const handleDeletePhoto = (photoId) => {
-    if (selectedCollection) {
-      deletePhotoFromCollection(selectedCollection.id, photoId);
-    }
-  };
-  const userCollections = collections.filter(
-    (collection) => collection.userId === currentUser?.username
-  );
+  const handleDeletePhoto = (collectionId, photoId) => {
+    deletePhotoFromCollection(collectionId, photoId);
+  };  
+  
+  const userCollections = currentUser?.role === 'Admin'
+    ? collections
+    : collections.filter((collection) => collection.userId === currentUser?.username);
 
   return (
     <div>
-      <CollectionForm onSave={handleSaveCollection} collection={selectedCollection} />
-      <CollectionList
-        collections={userCollections}
-        onSelect={handleSelectCollection}
-        onDelete={handleDeleteCollection}
-      />
-      {selectedCollection && (
-        <>
-        yesss
-          <PhotoList
-            photos={selectedCollection.photos}
-            onDelete={handleDeletePhoto}
+      <CollectionForm onSave={handleSaveCollection} />
+      {userCollections.map((collection) => (
+        <div key={collection.id}>
+          <CollectionList
+            collection={collection}
+            onDelete={handleDeleteCollection}
+            onEdit={handleEditCollection}
           />
-        </>
-      )}
+          <PhotoList
+  photos={collection.photos}
+  onDelete={handleDeletePhoto}
+  collectionId={collection.id}
+/>
+
+        </div>
+      ))}
+      <EditCollectionModal
+        show={isModalOpen}
+        onClose={handleModalClose}
+        onSave={handleModalSave}
+        defaultName={editingCollection?.name}
+      />
     </div>
   );
 };

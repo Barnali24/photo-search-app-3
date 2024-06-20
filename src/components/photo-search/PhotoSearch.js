@@ -3,7 +3,7 @@ import axios from 'axios';
 import PhotoItem from './PhotoItem';
 import { useSearchParams } from 'react-router-dom';
 
-const PhotoSearch = ({ onAddToCollection }) => {
+const PhotoSearch = ({collections, onAddToCollection }) => {
   const [query, setQuery] = useState('');
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -56,6 +56,7 @@ const PhotoSearch = ({ onAddToCollection }) => {
           <PhotoItem
             key={photo.id}
             photo={photo}
+            collections={collections}
             onAddToCollection={collectionId ? () => handleAddPhotoToCollection(photo) : undefined}
           />
         ))}
