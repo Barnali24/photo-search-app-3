@@ -1,42 +1,42 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import PhotoItem from './PhotoItem';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from "react";
+import axios from "axios";
+import PhotoItem from "./PhotoItem";
+import { useSearchParams } from "react-router-dom";
+import { API_ENDPOINT } from "../../constants/app.constants";
+import useFetch from "../../hooks/useFetch";
 
-const PhotoSearch = ({collections, onAddToCollection }) => {
-  const [query, setQuery] = useState('');
+const PhotoSearch = ({ collections, onAddToCollection }) => {
+  const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
-  const collectionId = searchParams.get('collectionId'); // Retrieve the collection ID from URL
+  const collectionId = searchParams.get("collectionId"); // Retrieve the collection ID from URL
 
+  const fetchParams = useMemo(() => ({ query }), [query]);
+
+  const { data, loading, error } = useFetch(
+    query ? API_ENDPOINT : null, // Only fetch when there is a query
+    fetchParams,
+    {} 
+  );
+
+  // Update photos state when data is fetched
+  useEffect(() => {
+    if (data && data.results) {
+      setPhotos(data.results);
+    }
+  }, [data]);
   const handleSearch = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get(`https://api.unsplash.com/search/photos`, {
-        params: { query },
-        headers: {
-          Authorization: 'Client-ID kDLlv3aLKWD-TDn55aYnnY4QZWd4_5wQDfHFpg-Tjbk' // Replace with your Unsplash access key
-        }
-      });
-      setPhotos(response.data.results);
-    } catch (err) {
-      setError('Failed to fetch photos. Please try again later.');
-    }
-    setLoading(false);
   };
 
   const handleAddPhotoToCollection = (photo) => {
-    console.log('Adding photo to collection:', photo, collectionId);
+    console.log("Adding photo to collection:", photo, collectionId);
     onAddToCollection(photo, collectionId);
   };
 
   return (
     <div>
-      <div className='form-container'>
+      <div className="form-container">
         <form onSubmit={handleSearch}>
           <input
             type="text"
@@ -57,7 +57,9 @@ const PhotoSearch = ({collections, onAddToCollection }) => {
             key={photo.id}
             photo={photo}
             collections={collections}
-            onAddToCollection={collectionId ? () => handleAddPhotoToCollection(photo) : undefined}
+            onAddToCollection={
+              collectionId ? () => handleAddPhotoToCollection(photo) : undefined
+            }
           />
         ))}
       </div>

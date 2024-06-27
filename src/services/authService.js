@@ -1,48 +1,65 @@
-export const getUsers = () => {
- 
-  const users = JSON.parse(localStorage.getItem('users')) || [
-    { username: 'user1', email: 'user1@example.com', password: 'pass1' },
-    { username: 'user2', email: 'user2@example.com', password: 'pass2' },
-  ];
-  return users;
-};
-
-export const setUsers = (users) => {
-  
-  localStorage.setItem('users', JSON.stringify(users));
-};
-
-export const login = (username, password) => {
-  return new Promise((resolve, reject) => {
-    const users = getUsers();console.log(users);
-    const user = users.find((u) => u.username === username && u.password === password);
-    if (user) {
-      // resolve({ username: user.username });
-      resolve(user);
-    } else {
-      reject(new Error('Invalid credentials'));
+export const getUsers = async () => {
+  try {
+    // Update the URL to point to your JSON Server endpoint for users
+    const response = await fetch("http://localhost:3000/users");
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
-  });
+    const users = await response.json();
+    return users;
+  } catch (error) {
+    console.error("Could not load users:", error);
+    return [];
+  }
 };
 
-export const signup = (username, email, password,role) => {
-  return new Promise((resolve, reject) => {
-    // Simulate checking for an existing user
-    const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-    const userExists = existingUsers.some(user => user.username === username || user.email === email);
+export const login = async (username, password) => {
+  try {
+    const users = await getUsers();
+    const user = users.find(
+      (u) => u.username === username && u.password === password
+    );
+    if (user) {
+      return user;
+    } else {
+      throw new Error("Invalid credentials");
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const signup = async (username, email, password, role) => {
+  try {
+    const users = await getUsers();
+    const userExists = users.some(
+      (user) => user.username === username || user.email === email
+    );
 
     if (userExists) {
-      // Reject the promise if the user already exists
-      reject(new Error('User already exists'));
+      throw new Error("User already exists");
     } else {
       // Create a new user object
       const newUser = { username, email, password, role }; // In a real app, you should hash the password
-      // Add the new user to the array of existing users
-      const updatedUsers = [...existingUsers, newUser];
-      // Save the updated users array to local storage
-      localStorage.setItem('users', JSON.stringify(updatedUsers));
-      // Resolve the promise with the new user's data
-      resolve(newUser);
+
+      // Make a POST request to JSON Server to create the new user
+      const response = await fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      // The JSON Server will return the newly created user object, including an auto-generated id
+      const createdUser = await response.json();
+      return createdUser;
     }
-  });
+  } catch (error) {
+    throw error;
+  }
 };

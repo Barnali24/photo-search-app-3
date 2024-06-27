@@ -1,5 +1,6 @@
 // EditCollectionModal.js
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import "../../styles/EditCollectionModal.css";
 
 const EditCollectionModal = ({ show, onClose, onSave, defaultName }) => {
   const [collectionName, setCollectionName] = useState(defaultName);
@@ -24,7 +25,9 @@ const EditCollectionModal = ({ show, onClose, onSave, defaultName }) => {
             onChange={(e) => setCollectionName(e.target.value)}
           />
           <button type="submit">Save Changes</button>
-          <button type="button" onClick={onClose}>Cancel</button>
+          <button type="button" onClick={onClose}>
+            Cancel
+          </button>
         </form>
       </div>
     </div>

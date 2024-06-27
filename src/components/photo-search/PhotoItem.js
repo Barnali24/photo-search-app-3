@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const PhotoItem = ({ photo, collections, onAddToCollection }) => {
   const [searchParams] = useSearchParams();
-  const collectionId = searchParams.get('collectionId');
+  const collectionId = searchParams.get("collectionId");
   const [isAdded, setIsAdded] = useState(false);
 
   useEffect(() => {
@@ -17,6 +17,7 @@ const PhotoItem = ({ photo, collections, onAddToCollection }) => {
   const handleAddToCollectionClick = () => {
     if (onAddToCollection) {
       onAddToCollection(photo, collectionId);
+      alert("Photo added to the collection successfully");
       setIsAdded(true); // Set the flag to true after adding the photo
     }
   };
@@ -29,9 +30,9 @@ const PhotoItem = ({ photo, collections, onAddToCollection }) => {
         <button
           onClick={handleAddToCollectionClick}
           disabled={isAdded}
-          className={isAdded ? 'button-disabled' : ''}
+          className={isAdded ? "button-disabled" : ""}
         >
-          {isAdded ? 'Added' : 'Add to Collection'}
+          {isAdded ? "Added" : "Add to Collection"}
         </button>
       </div>
     </div>

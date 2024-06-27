@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const CollectionForm = ({ onSave, collection }) => {
-  const [name, setName] = useState(collection ? collection.name : '');
+  const [name, setName] = useState(collection ? collection.name : "");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(name);
-    setName('');
+    setName("");
   };
 
   return (
@@ -18,7 +18,7 @@ const CollectionForm = ({ onSave, collection }) => {
         placeholder="Enter collection name"
         required
       />
-      <button type="submit">{collection ? 'Update' : 'Create'}</button>
+      <button type="submit">{collection ? "Update" : "Create"}</button>
     </form>
   );
 };
