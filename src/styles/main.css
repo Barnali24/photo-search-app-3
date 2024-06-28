@@ -96,3 +96,23 @@ img {
     padding: 20px;
   }
 }
+.search-box {
+  position: relative;
+  width: 40%;
+  margin-left: 30%;
+  /* Other styles for the search box container */
+}
+
+.search-box input[type="text"] {
+  padding-left: 30px; /* Adjust the padding to make room for the icon */
+  /* Other styles for the input */
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px; /* Adjust the position as needed */
+  top: 35%;
+  transform: translateY(-50%);
+  color: #aaa; /* Adjust the color as needed */
+  /* Other styles for the icon */
+}

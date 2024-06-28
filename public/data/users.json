@@ -1,0 +1,7 @@
+[
+    {"username":"barnali","email":"barnali@ey.com","password":"Barnali1234*","role":"Admin"},
+    {"username":"Bhavani","email":"bhavani@ey.com","password":"Bhavani@013","role":"Viewer"},
+    {"username":"shaswati","email":"shaswati@ey.com","password":"Shaswati1234*","role":"Viewer"},
+    {"username":"ram","email":"ram@ey.com","password":"Ram1234*","role":"Admin"},
+    {"username":"shilpa","email":"shilpa@ey.com","password":"Shilpa1234*","role":"Admin"}
+]

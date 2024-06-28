@@ -14,11 +14,28 @@ import PhotoSearch from "./components/photo-search/PhotoSearch";
 import Header from "./components/Header";
 import CollectionManager from "./components/collections/CollectionManager";
 import "./App.css";
+import { ErrorBoundary } from 'react-error-boundary';
+
+function ErrorFallback({ error, resetErrorBoundary }) {
+  return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre>{error.message}</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </div>
+  );
+}
 
 const App = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser);
   const [collections, setCollections] = useState([]);
+  const [key, setKey] = useState(0); // A key to force remount the PhotoSearch component
+
+  const handleReset = () => {
+    // Perform any additional state cleanup if necessary
+    setKey((prevKey) => prevKey + 1); // Increment key to remount the component
+  };
 
   useEffect(() => {
     // Fetch collections from JSON Server
@@ -134,10 +151,17 @@ const App = () => {
           path="/photo-search"
           element={
             currentUser ? (
+              <ErrorBoundary
+              FallbackComponent={ErrorFallback}
+              onReset={handleReset}
+              resetKeys={[key]} // Pass key as resetKey to remount the component on reset
+            >
               <PhotoSearch
                 collections={collections}
                 onAddToCollection={handleAddToCollection}
+                key={key}
               />
+              </ErrorBoundary>
             ) : (
               <Navigate replace to="/" /> //Navigate component for redirection
             )

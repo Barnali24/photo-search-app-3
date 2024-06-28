@@ -27,13 +27,14 @@ const PhotoItem = ({ photo, collections, onAddToCollection }) => {
       <img src={photo.urls.small} alt={photo.description} />
       <div className="photo-details">
         <p>By: {photo.user.name}</p>
+        {collectionId &&
         <button
           onClick={handleAddToCollectionClick}
           disabled={isAdded}
           className={isAdded ? "button-disabled" : ""}
         >
           {isAdded ? "Added" : "Add to Collection"}
-        </button>
+        </button>}
       </div>
     </div>
   );

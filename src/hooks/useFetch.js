@@ -20,6 +20,7 @@ const useFetch = (url, params, options) => {
           ...options,
         });
         setData(response.data);
+        console.log(response);
       } catch (err) {
         setError(err);
       } finally {
